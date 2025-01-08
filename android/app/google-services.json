@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "632367938525",
+    "project_id": "tajawill-final",
+    "storage_bucket": "tajawill-final.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632367938525:android:a3042f1b2c27402d271434",
+        "android_client_info": {
+          "package_name": "com.example.tajawil_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr_8A-FZ92Ro99dphyYSDE3k1zrX-Vyu0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
