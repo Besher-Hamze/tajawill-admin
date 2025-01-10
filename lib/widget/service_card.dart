@@ -69,12 +69,6 @@ class ServiceCard extends StatelessWidget {
                     Spacer(),
                     Text("Longitude: ${service.longitude.toStringAsFixed(5)}"),
                     Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        _showMapDialog(context);
-                      },
-                      child: Text('Edit Location'),
-                    ),
                   ],
                 ),
                 SizedBox(height: 8),
@@ -120,67 +114,6 @@ class ServiceCard extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Show a dialog with an interactive map for location selection
-  void _showMapDialog(BuildContext context) {
-    LatLng selectedLocation = LatLng(service.latitude, service.longitude);
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Select Location'),
-        content: Container(
-          height: 400,
-          width: 400,
-          child: FlutterMap(
-            options: MapOptions(
-              center: selectedLocation,
-              zoom: 14,
-              onTap: (tapPosition, latLng) {
-                selectedLocation = latLng;
-              },
-            ),
-            children: [
-              TileLayer(
-                urlTemplate:
-                'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibW9ra3MiLCJhIjoiY20zdno3MXl1MHozNzJxcXp5bmdvbTllYyJ9.Ed_O6F-c2IZJE9DoCyPZ2Q',
-                additionalOptions: {
-                  'access_token':
-                  'pk.eyJ1IjoibW9ra3MiLCJhIjoiY20zdno3MXl1MHozNzJxcXp5bmdvbTllYyJ9.Ed_O6F-c2IZJE9DoCyPZ2Q',
-                },
-              ),
-              MarkerLayer(
-                markers: [
-                  Marker(
-                    point: selectedLocation,
-                    builder: (ctx) => Icon(
-                      Icons.location_on,
-                      color: Colors.red,
-                      size: 30,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              onLocationSelected(
-                  selectedLocation.latitude, selectedLocation.longitude);
-              Navigator.pop(context);
-            },
-            child: Text('Save'),
           ),
         ],
       ),

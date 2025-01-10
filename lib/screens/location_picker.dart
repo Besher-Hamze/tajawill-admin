@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LocationPickerScreen extends StatefulWidget {
   const LocationPickerScreen({super.key});
@@ -23,41 +22,43 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
     _getCurrentLocation();
   }
 
+  @override
+  void dispose() {
+    _mapController?.dispose();
+    super.dispose();
+  }
+
   Future<void> _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Check if location services are enabled
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      await Geolocator.openLocationSettings();
-      return Future.error('Location services are disabled.');
-    }
-
-    // Check for location permissions
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied.');
+    try {
+      if (!await Geolocator.isLocationServiceEnabled()) {
+        await Geolocator.openLocationSettings();
+        throw Exception('Location services are disabled.');
       }
-    }
 
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied.');
-    }
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          throw Exception('Location permissions are denied.');
+        }
+      }
 
-    // Get the current location
-    Position position = await Geolocator.getCurrentPosition();
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-    });
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('Location permissions are permanently denied.');
+      }
 
-    // Move the camera to the current location if the map is ready
-    if (_mapController != null) {
-      _mapController!.moveCamera(
-        CameraUpdate.newLatLng(_currentLocation!),
-      );
+      Position position = await Geolocator.getCurrentPosition();
+      setState(() {
+        _currentLocation = LatLng(position.latitude, position.longitude);
+      });
+
+      if (_mapController != null) {
+        _mapController!.moveCamera(
+          CameraUpdate.newLatLng(_currentLocation!),
+        );
+      }
+    } catch (e) {
+      print('Error fetching location: $e');
     }
   }
 
@@ -69,19 +70,17 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
         Marker(
           markerId: const MarkerId('selected_location'),
           position: location,
-          infoWindow: const InfoWindow(title: 'موقع المعهد'),
+          infoWindow: const InfoWindow(title: 'موقع الخدمة'),
         ),
       );
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('اختر موقع المعهد'),
-        backgroundColor: Colors.purpleAccent,
+        title: const Text('اختر موقع الخدمة'),
       ),
       body: Stack(
         children: [
@@ -115,14 +114,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
               ),
               onPressed: _selectedLocation != null
                   ? () {
-/*
-                final controller = Get.find<AuthController>();
-                controller.updateLocation(
-                  _selectedLocation!.latitude,
-                  _selectedLocation!.longitude,
-                );
-*/
-                Get.back();
+                Navigator.pop(context, _selectedLocation); // Return location
               }
                   : null,
               child: const Text(

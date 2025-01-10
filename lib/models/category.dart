@@ -11,7 +11,7 @@ class CategoryModel {
 
   factory CategoryModel.fromMap(Map<String, dynamic> map, String id) {
     return CategoryModel(
-      id: id,
+      id: map['id'] ?? id,
       name: map['name'] ?? '',
       description: map['description'] ?? '',
     );
@@ -24,4 +24,15 @@ class CategoryModel {
       'description': description,
     };
   }
+
+  // Equality and hashCode based on `id`
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is CategoryModel &&
+              runtimeType == other.runtimeType &&
+              id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

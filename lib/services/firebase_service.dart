@@ -70,9 +70,9 @@ class FirebaseService extends ChangeNotifier {
   }
 
   Future<void> addCategory(CategoryModel service) async {
-    var catRef= _firestore.collection('categories');
+    DocumentReference<Map<String, dynamic>> catRef= _firestore.collection('categories').doc();
     service.id=catRef.id;
-    await catRef.add(service.toMap());
+    await catRef.set(service.toMap());
     notifyListeners();
   }
 

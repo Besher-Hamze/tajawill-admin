@@ -12,6 +12,7 @@ class Service {
   final CategoryModel category;
   final double averageRating;
   final int totalRates;
+  final String governorates;
 
   Service({
     required this.id,
@@ -23,6 +24,7 @@ class Service {
     required this.imageUrl,
     required this.category,
     required this.userId,
+    required this.governorates,
     this.averageRating = 0.0,
     this.totalRates = 0,
   });
@@ -40,6 +42,7 @@ class Service {
       category: CategoryModel.fromMap(map['category'], ""),
       averageRating: map['averageRating']?.toDouble() ?? 0.0,
       totalRates: map['totalRates'] ?? 0,
+      governorates: map['governorates'] ?? "حلب"
     );
   }
 
@@ -55,6 +58,7 @@ class Service {
       'category': category.toMap(),
       'averageRating': averageRating,
       'totalRates': totalRates,
+      'governorates':governorates
     };
   }
 }
